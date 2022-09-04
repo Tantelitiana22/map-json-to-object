@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass, field
 from typing import TypeVar, List
 
 from deserealization.json_to_object.json2object import deserialize
@@ -8,39 +9,25 @@ T = TypeVar('T')
 encoding = "utf-8"
 
 
+@dataclass
 class Mapping:
-    type: str
-    data_type: str
-    source_field: str
-    target_field: str
-    action: str
-
-    def __init__(self, types="",
-                 data_type="",
-                 source_field="",
-                 target_field="",
-                 action=""):  # NOSONAR
-        self.type = types
-        self.data_type = data_type
-        self.source_field = source_field
-        self.target_field = target_field
-        self.action = action
-
-    def __repr__(self):
-        return ';'.join([self.type, self.data_type, self.source_field, self.target_field, self.action])
-
-    def __str__(self):
-        return self.__repr__()
+    type: str = field(default="")
+    data_type: str = field(default="")
+    source_field: str = field(default="")
+    target_field: str = field(default="")
+    action: str = field(default="")
 
 
+@dataclass
 class Entity:
-    entity_name: str
-    mappings = [Mapping()]
+    entity_name: str = field(default="")
+    mappings: List[Mapping] = field(default_factory=lambda: [Mapping()])
 
 
+@dataclass
 class Json:
-    source_name: str
-    entities: List[Entity] = [Entity()]
+    source_name: str = field(default="")
+    entities: List[Entity] = field(default_factory=lambda: [Entity()])
 
 
 class ApplyMapping:
