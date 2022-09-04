@@ -1,0 +1,16 @@
+{
+  "source_name": "CUSTOMERS",
+  "entities": [
+    {
+      "entity_name": "customers",
+      "mappings": [
+        {
+          "type": "oneToOne",
+          "data_type": "string",
+          "source_field": "code_document",
+          "target_field": "reference"
+        }
+      ]
+    }
+  ]
+}
