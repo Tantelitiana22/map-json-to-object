@@ -1,5 +1,5 @@
 import json
-from typing import TypeVar
+from typing import TypeVar, List
 
 from deserealization.json_to_object.json2object import deserialize
 
@@ -19,7 +19,7 @@ class Mapping:
                  data_type="",
                  source_field="",
                  target_field="",
-                 action=""): # NOSONAR
+                 action=""):  # NOSONAR
         self.type = types
         self.data_type = data_type
         self.source_field = source_field
@@ -40,7 +40,7 @@ class Entity:
 
 class Json:
     source_name: str
-    entities = [Entity()]
+    entities: List[Entity] = [Entity()]
 
 
 class ApplyMapping:
