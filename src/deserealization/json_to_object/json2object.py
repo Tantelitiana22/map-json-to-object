@@ -1,10 +1,10 @@
 import contextlib
-import json
 import copy
+import json
 from typing import List
 
 
-def deserialize(data, model)->List:
+def deserialize(data, model) -> List:
     """
     Parameters
     ----------
@@ -25,31 +25,21 @@ def deserialize(data, model)->List:
         raise ValueError('The data passed in is either null or empty.')
     if not model or isinstance(model, str):
         raise ValueError('The model passed in is null or a string.')
+    obj = copy.copy(model)
     if isinstance(data, list):
-        models = []
-        for d in data:
-            obj = copy.copy(model)
-            results = deserialize(d, obj)
-            models.append(results)
-        return models
-    elif isinstance(data, dict):
-        obj = copy.copy(model)
+        return [deserialize(d, obj) for d in data]
+    if isinstance(data, dict):
         for k, v in data.items():
-            if not isinstance(v, dict) and not isinstance(v, list):
-                setattr(obj, k, v)
-            elif isinstance(v, list):
-                with contextlib.suppress(Exception):
+            with contextlib.suppress(Exception):
+                if isinstance(v, (dict, list)):
                     attr = getattr(obj, k)
-                    result = deserialize(v, attr[0])
-                    setattr(obj, k, result)
-            else:
-                with contextlib.suppress(Exception):
-                    attr = getattr(obj, k)
-                    result = deserialize(v, attr)
-                    setattr(obj, k, result)
+                    model = attr[0] if isinstance(v, list) else attr
+                    result = deserialize(v, model)
+                else:
+                    result = v
+                setattr(obj, k, result)
         return obj
-    elif isinstance(data, str):
+    if isinstance(data, str):
         return deserialize(json.loads(data), model)
-    else:
-        raise ValueError('Data representation of model needs to be in a list of dictionaries, dictionary or str json. '
-                         'Check to see if format is correct.')
+    raise ValueError('Data representation of model needs to be in a list of dictionaries, dictionary or str json. '
+                     'Check to see if format is correct.')
