@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List
 
+from deserealization.json_to_object.json2object import IDataClass
+
 
 @dataclass
 class Mapping:
@@ -18,7 +20,7 @@ class Entity:
 
 
 @dataclass
-class Json:
+class Json(IDataClass):
     source_name: str = field(default="")
     entities: List[Entity] = field(default_factory=lambda: [Entity()])
 
@@ -39,6 +41,6 @@ class EntityWithRequiredField:
 
 
 @dataclass
-class JsonWithRequiredField:
+class JsonWithRequiredField(IDataClass):
     source_name: str = field(default="")
     entities: List[EntityWithRequiredField] = field(default_factory=lambda: [EntityWithRequiredField()])

@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 import copy
 import json
-from typing import List, Dict, TypeVar, Union, NewType
-from dataclasses import is_dataclass
+from typing import List, Dict, Protocol, Optional
+from dataclasses import is_dataclass, Field
 
-T = TypeVar("T")
-DataType = NewType("DataType", Union[str, List, Dict])
+
+class IDataClass(Protocol):
+    __dataclass_fields__: Dict[str, Field]
 
 
 class Json2Object:
@@ -14,16 +17,28 @@ class Json2Object:
     :model: is the object model to use for deserialization
     """
 
-    def __init__(self, data: DataType, model: T):
+    def __init__(self, data, model: IDataClass):
         if not data or isinstance(data, str) and not data.strip():
             raise ValueError('The data most not to be null or empty.')
         if not is_dataclass(model):
             raise ValueError('The model most be a dataclass.')
-
+        if isinstance(data, dict):
+            self.model_and_data_validator(data, model)
         self.data = data
-        self.model = copy.copy(model)
+        self.model: IDataClass = copy.copy(model)
 
-    def deserialize_list_data(self, data: List) -> List[T]:
+    @staticmethod
+    def model_and_data_validator(data: Dict, model: IDataClass):
+        data_keys = list(data.keys())
+        model_attributes = list(model.__dataclass_fields__.keys())
+        if diff_field := list(set(model_attributes) - set(data_keys)):
+            for field in diff_field:
+                field_value: Optional[Field] = model.__dataclass_fields__.get(field)
+                if _ := (field_value.metadata.get("required") in [None, True]) if field_value else False:
+                    raise ValueError(f"Field not match. Some field are missing: {diff_field}. If this field is not "
+                                     f"required, in dataclass field, add option metadata=dict(required=False).")
+
+    def deserialize_list_data(self, data: List) -> List | IDataClass:
         """
         Parameters
         ----------
@@ -33,7 +48,7 @@ class Json2Object:
         """
         return [Json2Object(d, self.model).build() for d in data]
 
-    def deserialize_dict_data(self, data: Dict) -> T:
+    def deserialize_dict_data(self, data: Dict) -> IDataClass:
         """
         Parameters
         ----------
@@ -41,13 +56,6 @@ class Json2Object:
         Returns model
         -------
         """
-        data_keys = list(data.keys())
-        model_attributes = list(self.model.__dataclass_fields__.keys())
-        if diff_field := list(set(model_attributes) - set(data_keys)):
-            for field in diff_field:
-                if self.model.__dataclass_fields__.get(field).metadata.get("required") in [None, True]:
-                    raise ValueError(f"Field not match. Some field are missing: {diff_field}. If this field is not "
-                                     f"required, in dataclass field, add option metadata=dict(required=False).")
         for key, value in data.items():
             if isinstance(value, (dict, list)):
                 attr = getattr(self.model, key)
@@ -58,7 +66,7 @@ class Json2Object:
             setattr(self.model, key, result)
         return self.model
 
-    def deserialize_str_data(self, data: str) -> T:
+    def deserialize_str_data(self, data: str) -> List | IDataClass:
         """
         Parameters
         ----------
@@ -68,7 +76,7 @@ class Json2Object:
         """
         return Json2Object(json.loads(data), self.model).build()
 
-    def build(self) -> Union[List[T], T]:
+    def build(self) -> List | IDataClass:
         """
         Returns a model or a list of model
         -------
