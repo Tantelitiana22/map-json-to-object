@@ -8,7 +8,15 @@
           "type": "oneToOne",
           "data_type": "string",
           "source_field": "code_document",
-          "target_field": "reference"
+          "target_field": "reference",
+          "action": "filter"
+        },
+        {
+          "type": "oneToOne",
+          "data_type": "int",
+          "source_field": "total_object_gone",
+          "target_field": "total_sold",
+          "action": "filter"
         }
       ]
     }

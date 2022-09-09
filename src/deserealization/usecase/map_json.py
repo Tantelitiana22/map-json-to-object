@@ -1,12 +1,5 @@
-import json
 from dataclasses import dataclass, field
-from typing import TypeVar, List
-
-from deserealization.json_to_object.json2object import deserialize
-
-T = TypeVar('T')
-
-encoding = "utf-8"
+from typing import List
 
 
 @dataclass
@@ -30,19 +23,22 @@ class Json:
     entities: List[Entity] = field(default_factory=lambda: [Entity()])
 
 
-class ApplyMapping:
+@dataclass
+class MappingWithRequiredField:
+    type: str = field(default="")
+    data_type: str = field(default="")
+    source_field: str = field(default="")
+    target_field: str = field(default="")
+    action: str = field(default="", metadata=dict(required=False))
 
-    @staticmethod
-    def __read_json(path: str) -> str:
-        """ Get string from file"""
-        with open(path, encoding=encoding) as json_file:
-            mapping_str = json.loads(json_file.read())
-        return mapping_str
 
-    @staticmethod
-    def __transform_json_to_object(mapping_str: str, model: T) -> T:
-        return deserialize(mapping_str, model)
+@dataclass
+class EntityWithRequiredField:
+    entity_name: str = field(default="")
+    mappings: List[MappingWithRequiredField] = field(default_factory=lambda: [MappingWithRequiredField()])
 
-    @classmethod
-    def get(cls, path: str, model: T) -> T:
-        return cls.__transform_json_to_object(cls.__read_json(path), model)
+
+@dataclass
+class JsonWithRequiredField:
+    source_name: str = field(default="")
+    entities: List[EntityWithRequiredField] = field(default_factory=lambda: [EntityWithRequiredField()])
