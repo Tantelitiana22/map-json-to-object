@@ -1,1 +1,6 @@
 pytest
+pylint
+types-setuptools==65.3.0
+typing_extensions==4.3.0
+mypy==0.971
+mypy-extensions==0.4.3
