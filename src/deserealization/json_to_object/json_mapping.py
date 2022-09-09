@@ -21,9 +21,9 @@ class ApplyMapping:
         return mapping_str
 
     @staticmethod
-    def __transform_json_to_object(mapping_str: str, model: T) -> T:
+    def transform_json_to_object(mapping_str: str, model: T) -> T:
         return json2object.Json2Object(mapping_str, model).build()
 
     @classmethod
     def get(cls, path: str, model: T) -> T:
-        return cls.__transform_json_to_object(cls.__read_json(path), model)
+        return cls.transform_json_to_object(cls.__read_json(path), model)
