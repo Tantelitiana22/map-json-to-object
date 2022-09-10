@@ -1,11 +1,10 @@
-from dataclasses import dataclass, field
 from typing import List
-
-from deserealization.json_to_object.json2object import IDataClass
+from dataclasses import dataclass, field
+from deserealization.typing import IDataClass
 
 
 @dataclass
-class Mapping:
+class Mapping(IDataClass):
     type: str = field(default="")
     data_type: str = field(default="")
     source_field: str = field(default="")
@@ -14,7 +13,7 @@ class Mapping:
 
 
 @dataclass
-class Entity:
+class Entity(IDataClass):
     entity_name: str = field(default="")
     mappings: List[Mapping] = field(default_factory=lambda: [Mapping()])
 
@@ -26,7 +25,7 @@ class Json(IDataClass):
 
 
 @dataclass
-class MappingWithRequiredField:
+class MappingWithRequiredField(IDataClass):
     type: str = field(default="")
     data_type: str = field(default="")
     source_field: str = field(default="")
@@ -35,7 +34,7 @@ class MappingWithRequiredField:
 
 
 @dataclass
-class EntityWithRequiredField:
+class EntityWithRequiredField(IDataClass):
     entity_name: str = field(default="")
     mappings: List[MappingWithRequiredField] = field(default_factory=lambda: [MappingWithRequiredField()])
 

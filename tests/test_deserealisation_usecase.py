@@ -1,13 +1,13 @@
 import pytest
 from deserealization.main import get_json_to_object
-from deserealization.usecase.map_json import JsonWithRequiredField
+from deserealization.usecase.map_json import JsonWithRequiredField, Json
 
 
 def test_use_case():
     # GIVEN
     path_test = '/rules/mapping/customer_example_file.json'
     # WHEN
-    result = get_json_to_object(json_file_path=path_test)
+    result = get_json_to_object(json_file_path=path_test, model=Json())
     entities = result.entities[0]
     mapping = entities.mappings[0]
     # THEN
@@ -25,7 +25,7 @@ def test_required_field_mission_in_json():
     path_test = '/rules/mapping/bad_example_file.json'
     # THEN
     with pytest.raises(ValueError):
-        get_json_to_object(json_file_path=path_test)
+        get_json_to_object(json_file_path=path_test, model=Json())
 
 
 def test_required_field_false_in_model():

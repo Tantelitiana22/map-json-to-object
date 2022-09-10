@@ -2,12 +2,9 @@ from __future__ import annotations
 
 import copy
 import json
-from typing import List, Dict, Protocol, Optional
+from typing import List, Dict, Optional
 from dataclasses import is_dataclass, Field
-
-
-class IDataClass(Protocol):
-    __dataclass_fields__: Dict[str, Field]
+from deserealization.typing import IDataClass
 
 
 class Json2Object:
