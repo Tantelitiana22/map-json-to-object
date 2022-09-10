@@ -43,3 +43,16 @@ class EntityWithRequiredField(IDataClass):
 class JsonWithRequiredField(IDataClass):
     source_name: str = field(default="")
     entities: List[EntityWithRequiredField] = field(default_factory=lambda: [EntityWithRequiredField()])
+
+
+@dataclass
+class EntityWithListFiled(IDataClass):
+    entity_name: str = field(default="")
+    tags: List[str] = field(default_factory=lambda: [''])
+    mappings: List[Mapping] = field(default_factory=lambda: [Mapping()])
+
+
+@dataclass
+class JsonWithEntityTagged(IDataClass):
+    source_name: str = field(default="")
+    entities: List[EntityWithListFiled] = field(default_factory=lambda: [EntityWithListFiled()])

@@ -4,12 +4,11 @@ Mapping json file to an Object Method
 from __future__ import annotations
 
 import json
-from typing import TypeVar, List
+from typing import  List
 from deserealization.json_to_object import json2object
 from deserealization.typing import IDataClass
 
 ENCODING = "utf-8"
-T = TypeVar('T')
 
 
 class ApplyMapping:
@@ -22,9 +21,9 @@ class ApplyMapping:
         return mapping_str
 
     @staticmethod
-    def transform_json_to_object(mapping_str: str, model: IDataClass) -> List | IDataClass:
+    def transform_json_to_object(mapping_str: str, model: IDataClass) -> List | IDataClass | str:
         return json2object.Json2Object(mapping_str, model).build()
 
     @classmethod
-    def get(cls, path: str, model: IDataClass) -> List | IDataClass:
+    def get(cls, path: str, model: IDataClass) -> List | IDataClass | str:
         return cls.transform_json_to_object(cls.__read_json(path), model)

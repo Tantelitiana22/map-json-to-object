@@ -14,18 +14,20 @@ class Json2Object:
     :model: is the object model to use for deserialization
     """
 
-    def __init__(self, data, model: IDataClass):
+    def __init__(self, data, model: IDataClass | str):
         if not data or isinstance(data, str) and not data.strip():
             raise ValueError('The data most not to be null or empty.')
-        if not is_dataclass(model):
+        if not is_dataclass(model) and not isinstance(model, str):
             raise ValueError('The model most be a dataclass.')
         if isinstance(data, dict):
             self.model_and_data_validator(data, model)
         self.data = data
-        self.model: IDataClass = copy.copy(model)
+        self.model: IDataClass | str = model if isinstance(model, str) else copy.copy(model)
 
     @staticmethod
-    def model_and_data_validator(data: Dict, model: IDataClass):
+    def model_and_data_validator(data: Dict, model: IDataClass | str):
+        if isinstance(model, str):
+            return
         data_keys = list(data.keys())
         model_attributes = list(model.__dataclass_fields__.keys())
         if diff_field := list(set(model_attributes) - set(data_keys)):
@@ -43,9 +45,11 @@ class Json2Object:
         Returns list of model
         -------
         """
+        if isinstance(self.model, str):
+            return data
         return [Json2Object(d, self.model).build() for d in data]
 
-    def deserialize_dict_data(self, data: Dict) -> IDataClass:
+    def deserialize_dict_data(self, data: Dict) -> IDataClass | str | List:
         """
         Parameters
         ----------
@@ -63,7 +67,7 @@ class Json2Object:
             setattr(self.model, key, result)
         return self.model
 
-    def deserialize_str_data(self, data: str) -> List | IDataClass:
+    def deserialize_str_data(self, data: str) -> List | IDataClass | str:
         """
         Parameters
         ----------
@@ -73,7 +77,7 @@ class Json2Object:
         """
         return Json2Object(json.loads(data), self.model).build()
 
-    def build(self) -> List | IDataClass:
+    def build(self) -> List | IDataClass | str:
         """
         Returns a model or a list of model
         -------
