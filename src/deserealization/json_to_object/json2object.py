@@ -42,7 +42,8 @@ class Json2Object:
         diff_field_from_json = list(set(data_keys) - set(model_attributes))
         if diff_field_from_json and not skip_undefined_json_field:
             raise ValueError(f"Field not match. There are too many field in json file compare to model."
-                             f" Those flied are {diff_field_from_json}")
+                             f" Those flied are {diff_field_from_json}. To skip undefined json field, put "
+                             f"parameter skip_undefined_json_field=True")
 
     def deserialize_list_data(self, data: List) -> List | IDataClass:
         """
