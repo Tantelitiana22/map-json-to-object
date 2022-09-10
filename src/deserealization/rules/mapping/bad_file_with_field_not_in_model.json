@@ -3,16 +3,14 @@
   "entities": [
     {
       "entity_name": "customers",
-      "tags": ["sold", "delivery",89],
-      "code_numbers": [1924, 73829, 6977349],
-      "three_last_prices": [8.99, 20.0, 12.44],
       "mappings": [
         {
           "type": "oneToOne",
           "data_type": "string",
           "source_field": "code_document",
           "target_field": "reference",
-          "action": "filter"
+          "action": "filter",
+          "toto": "value test"
         },
         {
           "type": "oneToOne",

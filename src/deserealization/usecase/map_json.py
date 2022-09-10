@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 from dataclasses import dataclass, field
 from deserealization.typing import IDataClass
@@ -5,50 +7,52 @@ from deserealization.typing import IDataClass
 
 @dataclass
 class Mapping(IDataClass):
-    type: str = field(default="")
-    data_type: str = field(default="")
-    source_field: str = field(default="")
-    target_field: str = field(default="")
-    action: str = field(default="")
+    type: str = field(default=str())
+    data_type: str = field(default=str())
+    source_field: str = field(default=str())
+    target_field: str = field(default=str())
+    action: str = field(default=str())
 
 
 @dataclass
 class Entity(IDataClass):
-    entity_name: str = field(default="")
+    entity_name: str = field(default=str())
     mappings: List[Mapping] = field(default_factory=lambda: [Mapping()])
 
 
 @dataclass
 class Json(IDataClass):
-    source_name: str = field(default="")
+    source_name: str = field(default=str())
     entities: List[Entity] = field(default_factory=lambda: [Entity()])
 
 
 @dataclass
 class MappingWithRequiredField(IDataClass):
-    type: str = field(default="")
-    data_type: str = field(default="")
-    source_field: str = field(default="")
-    target_field: str = field(default="")
-    action: str = field(default="", metadata=dict(required=False))
+    type: str = field(default=str())
+    data_type: str = field(default=str())
+    source_field: str = field(default=str())
+    target_field: str = field(default=str())
+    action: str = field(default=str(), metadata=dict(required=False))
 
 
 @dataclass
 class EntityWithRequiredField(IDataClass):
-    entity_name: str = field(default="")
+    entity_name: str = field(default=str())
     mappings: List[MappingWithRequiredField] = field(default_factory=lambda: [MappingWithRequiredField()])
 
 
 @dataclass
 class JsonWithRequiredField(IDataClass):
-    source_name: str = field(default="")
+    source_name: str = field(default=str())
     entities: List[EntityWithRequiredField] = field(default_factory=lambda: [EntityWithRequiredField()])
 
 
 @dataclass
 class EntityWithListFiled(IDataClass):
-    entity_name: str = field(default="")
-    tags: List[str] = field(default_factory=lambda: [''])
+    entity_name: str = field(default=str())
+    tags: List[str | int] = field(default_factory=lambda: [str()])
+    three_last_prices: List[float] = field(default_factory=lambda: [float()])
+    code_numbers: List[int] = field(default_factory=lambda: [int()])
     mappings: List[Mapping] = field(default_factory=lambda: [Mapping()])
 
 

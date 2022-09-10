@@ -20,8 +20,9 @@ class EnumJsonModel(enum.Enum):
     json_with_entity_tagged = JsonWithEntityTagged
 
 
-def get_json_to_object(json_file_path: str, model_enum: EnumJsonModel) -> \
+def get_json_to_object(json_file_path: str, model_enum: EnumJsonModel, skip_undefined_json_field: bool = False) -> \
         List | UnionType:
     json_absolute_path_customers = pkg_resources \
         .resource_filename(__name__, json_file_path)
-    return ApplyMapping.get(path=json_absolute_path_customers, model=model_enum.value())  # type: ignore
+    return ApplyMapping.get(path=json_absolute_path_customers, model=model_enum.value(),
+                            skip_undefined_json_field=skip_undefined_json_field)  # type: ignore

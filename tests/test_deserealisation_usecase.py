@@ -51,4 +51,24 @@ def test_use_case_with_list():
     result = get_json_to_object(json_file_path=path_test, model_enum=EnumJsonModel.json_with_entity_tagged)
     entities = result.entities[0]
     # THEN
-    assert entities.tags == ["sold", "delivery"]
+    assert entities.tags == ["sold", "delivery", 89]
+    assert entities.code_numbers == [1924, 73829, 6977349]
+    assert entities.three_last_prices == [8.99, 20.0, 12.44]
+
+
+def test_bad_file_with_field_not_in_model():
+    # GIVEN
+    path_test = '/rules/mapping/bad_file_with_field_not_in_model.json'
+    # THEN
+    with pytest.raises(ValueError):
+        get_json_to_object(json_file_path=path_test, model_enum=EnumJsonModel.json)
+
+
+def test_skip_field_from_json_not_in_model():
+    # GIVEN
+    path_test = '/rules/mapping/bad_file_with_field_not_in_model.json'
+    # WHEN
+    result = get_json_to_object(json_file_path=path_test, model_enum=EnumJsonModel.json, skip_undefined_json_field=True)
+    key_mappings = list(result.entities[0].mappings[0].__dict__.keys())
+    # THEN
+    assert "toto" not in key_mappings
