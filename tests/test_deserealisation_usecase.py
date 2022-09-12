@@ -1,5 +1,6 @@
 import pytest
-from deserealization.main import get_json_to_object, EnumJsonModel
+from deserealization.main import get_json_to_object
+from deserealization.usecase.map_json import EnumJsonModel
 
 
 def test_use_case():

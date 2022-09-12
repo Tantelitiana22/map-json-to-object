@@ -1,1 +1,1 @@
-from deserealization.json_to_object.json_mapping import ApplyMapping
+from deserealization.json_to_object.json_mapping import ApplyJsonMapping, ApplyGenericJsonMapping

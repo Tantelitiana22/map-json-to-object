@@ -3,29 +3,28 @@ Mapping json file to an Object Method
 """
 from __future__ import annotations
 
-import json
 from typing import List
-from deserealization.json_to_object import json2object
-from deserealization.json_to_object.json2object import UnionBasicType
-from deserealization.typing import IDataClass
 
-ENCODING = "utf-8"
+from deserealization.typing import JsonToObjectType
+from deserealization.json_to_object.common.abstract_apply_mapping import AbstractApplyMapping
+from deserealization.json_to_object.implementation.json2object_factory import Json2ObjectFactory, EnumJson2ObjectFactory
 
 
-class ApplyMapping:
-
+class ApplyJsonMapping(AbstractApplyMapping):
     @staticmethod
-    def __read_json(path: str) -> str:
-        """ Get string from file"""
-        with open(path, encoding=ENCODING) as json_file:
-            mapping_str = json.loads(json_file.read())
-        return mapping_str
+    def transform_json_to_object(mapping_str: str, model: JsonToObjectType, skip_undefined_json_field: bool) \
+            -> List | JsonToObjectType:
+        json_to_object_factory = Json2ObjectFactory(enum_json_to_object=EnumJson2ObjectFactory.json2Object,
+                                                    data=mapping_str, model=model,
+                                                    skip_undefined_json_field=skip_undefined_json_field)
+        return json_to_object_factory().build()
 
+
+class ApplyGenericJsonMapping(AbstractApplyMapping):
     @staticmethod
-    def transform_json_to_object(mapping_str: str, model: IDataClass, skip_undefined_json_field: bool) \
-            -> List | IDataClass | UnionBasicType:
-        return json2object.Json2Object(mapping_str, model, skip_undefined_json_field).build()
-
-    @classmethod
-    def get(cls, path: str, model: IDataClass, skip_undefined_json_field: bool) -> List | IDataClass | UnionBasicType:
-        return cls.transform_json_to_object(cls.__read_json(path), model, skip_undefined_json_field)
+    def transform_json_to_object(mapping_str: str, model: JsonToObjectType, skip_undefined_json_field: bool) \
+            -> List | JsonToObjectType:
+        json_to_object_factory = Json2ObjectFactory(enum_json_to_object=EnumJson2ObjectFactory.generic_json2object,
+                                                    data=mapping_str, model=model,
+                                                    skip_undefined_json_field=skip_undefined_json_field)
+        return json_to_object_factory().build()

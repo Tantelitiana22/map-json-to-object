@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 from typing import List
 from dataclasses import dataclass, field
 from deserealization.typing import IDataClass
@@ -60,3 +61,9 @@ class EntityWithListFiled(IDataClass):
 class JsonWithEntityTagged(IDataClass):
     source_name: str = field(default="")
     entities: List[EntityWithListFiled] = field(default_factory=lambda: [EntityWithListFiled()])
+
+
+class EnumJsonModel(enum.Enum):
+    json = Json()
+    json_with_required_fields = JsonWithRequiredField()
+    json_with_entity_tagged = JsonWithEntityTagged()
