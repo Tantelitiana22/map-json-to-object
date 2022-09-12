@@ -9,14 +9,14 @@ def test_generic_generic_use_case():
     # WHEN
     result = get_generic_json_to_object(json_file_path=path_test_generic_generic, model_enum=EnumGenericJsonModel.json)
     entities = result.entities[0]
-    mapping = entities.mappings[0]
+    mapping = entities.mappings[1]
     # THEN
     assert entities.entity_name == "customers"
     assert result.source_name == "CUSTOMERS"
     assert mapping.type == "oneToOne"
-    assert mapping.data_type == "string"
-    assert mapping.source_field == "code_document"
-    assert mapping.target_field == "reference"
+    assert mapping.data_type == "int"
+    assert mapping.source_field == "total_object_gone"
+    assert mapping.target_field == "total_sold"
     assert mapping.action == "filter"
 
 
