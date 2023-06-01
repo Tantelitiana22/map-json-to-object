@@ -32,7 +32,7 @@ class MappingWithRequiredField(IDataClass):
     data_type: str
     source_field: str
     target_field: str
-    action: str = field(metadata=dict(required=False))
+    action: str = field(metadata={'required':False})
 
 
 @dataclass

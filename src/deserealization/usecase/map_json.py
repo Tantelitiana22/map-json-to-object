@@ -33,7 +33,7 @@ class MappingWithRequiredField(IDataClass):
     data_type: str = field(default=str())
     source_field: str = field(default=str())
     target_field: str = field(default=str())
-    action: str = field(default=str(), metadata=dict(required=False))
+    action: str = field(default=str(), metadata={'required':False})
 
 
 @dataclass
