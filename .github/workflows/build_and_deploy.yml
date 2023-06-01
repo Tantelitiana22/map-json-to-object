@@ -1,0 +1,35 @@
+name: build and deploy
+
+on:
+  workflow_dispatch
+jobs:
+  deploy:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: initpypirc script
+        run: |
+          echo "[distutils]" >> ~/.pypirc
+          echo "index-servers = pypi" >> ~/.pypirc
+          echo "[pypi]" >> ~/.pypirc
+          echo "repository: ${PYPI_REPO}" >> ~/.pypirc'
+          echo "username: ${PYPI_USER}" >> ~/.pypirc'
+          echo "password: ${PYPI_PASSWORD}" >> ~/.pypirc'
+      - name: Install twine and wheel
+        run: |
+          pip install twine wheel
+      - name: check if credential is good
+        run: |
+          python setup.py check sdist bdist_wheel
+      - name: Build a binary wheel
+        run: |
+          python setup.py sdist bdist_wheel
+      - name: deploy into pypi with twine
+        run: |
+          twine upload dist/*.whl
+
