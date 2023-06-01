@@ -14,6 +14,7 @@ jobs:
           python-version: "3.10"
       - name: initpypirc script
         run: |
+          touch ~/.pypirc
           echo "[distutils]" >> ~/.pypirc
           echo "index-servers = pypi" >> ~/.pypirc
           echo "[pypi]" >> ~/.pypirc
