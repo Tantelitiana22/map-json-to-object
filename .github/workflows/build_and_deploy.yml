@@ -20,7 +20,7 @@ jobs:
           echo "repository: ${PYPI_REPO}" >> ~/.pypirc
           echo "username: ${PYPI_USER}" >> ~/.pypirc
           echo "password: ${PYPI_PASSWORD}" >> ~/.pypirc
-          echo ~/.pypirc
+          head ~/.pypirc
       - name: Install twine and wheel
         run: |
           pip install twine wheel
