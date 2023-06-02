@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="json-deserializer-to-object",
-    version="0.0.1",
+    version="0.0.2",
     author="Andrianarivo",
     author_email="tantelitiana22@gmail.com",
     description="Small library utils",
